@@ -32,15 +32,15 @@ def QueryDnsByTcp(dns_ip, dns_port, query_data):
     return data
 
 class ThreadedUDPServer(SocketServer.ThreadingMixIn, SocketServer.UDPServer):
-    def __init__(self, s, t):
-        SocketServer.UDPServer.__init__(self, s, t)
-
-class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
     # Ctrl-C will cleanly kill all spawned threads
     daemon_threads = True
     # much faster rebinding
     allow_reuse_address = True
+    
+    def __init__(self, s, t):
+        SocketServer.UDPServer.__init__(self, s, t)
 
+class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         query_data = self.request[0]
         udp_sock = self.request[1]
